@@ -20,6 +20,7 @@ Add to your .eslint.js:
      ...,
       "@monade/vue2/readonly-props": 2,
       "@monade/vue2/missing-component-decorator": 2,
+      "@monade/vue2/broken-reactivity": 2,
    }
 
 ```
@@ -29,10 +30,11 @@ Add to your .eslint.js:
 ### missing-component-decorator
 It marks an error when you forget to add the @Component decorator to a Vue component.
 
-
-
 ### readonly-props
 It marks error if a @Prop or @Ref is missing the readonly statement.
+
+### broken-reactivity
+It marks an error when you forget to set a default value to data in vue components.
 
 
 ## TODO

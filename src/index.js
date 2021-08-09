@@ -1,3 +1,11 @@
+function isVue(node) {
+  if (!node.superClass) {
+    return false;
+  }
+
+  return node.superClass.name === 'Vue' || (node.superClass.callee && node.superClass.callee.name === 'mixins');
+}
+
 module.exports = {
   rules: {
     "readonly-props": {
@@ -24,18 +32,33 @@ module.exports = {
       create: function (context) {
         return {
           ClassDeclaration(node) {
-            if (!node.superClass) {
-              return;
-            }
-
-            const isVue = node.superClass.name === 'Vue' || (node.superClass.callee && node.superClass.callee.name === 'mixins');
-
-            if (isVue && !node.decorators) {
+            if (isVue(node) && !node.decorators) {
               context.report({
                 node: node,
                 message: 'Missing @Component'
               });
             }
+          }
+        }
+      }
+    },
+    "broken-reactivity": {
+      create: function (context) {
+        return {
+          ClassProperty(node) {
+            if (!isVue(node.parent.parent)) {
+              return;
+            }
+            if (node.value) {
+              return;
+            }
+            if (node.decorators?.length) {
+              return;
+            }
+            context.report({
+              node: node,
+              message: 'Broken reactivity: Please assign a default value to props'
+            });
           }
         }
       }
