@@ -24,7 +24,7 @@ module.exports = {
               return;
             }
             const decoratorName = getDecoratorName(node);
-            if (['Prop', 'Ref'].indexOf(decoratorName) === -1) {
+            if (['Prop', 'Ref', 'inject', 'Inject'].indexOf(decoratorName) === -1) {
               return;
             }
             if (!node.parent.readonly) {
