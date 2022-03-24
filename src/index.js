@@ -6,6 +6,8 @@ function isVue(node) {
   return node.superClass.name === 'Vue' || (node.superClass.callee && node.superClass.callee.name === 'mixins');
 }
 
+const getDecoratorName = decorator => decorator?.expression?.callee?.name || decorator?.expression?.name;
+
 module.exports = {
   rules: {
     "readonly-props": {
@@ -16,6 +18,13 @@ module.exports = {
               return;
             }
             if (node.parent.type !== 'ClassProperty') {
+              return;
+            }
+            if (!isVue(node.parent.parent.parent)) {
+              return;
+            }
+            const decoratorName = getDecoratorName(node);
+            if (['Prop', 'Ref', 'inject', 'Inject'].indexOf(decoratorName) === -1) {
               return;
             }
             if (!node.parent.readonly) {
